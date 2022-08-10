@@ -1,2 +1,2 @@
 # pyprogram
-for python program learning
+for python program practising
