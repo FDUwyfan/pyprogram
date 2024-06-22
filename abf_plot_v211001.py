@@ -1,10 +1,9 @@
 # !/usr/bin/python3
 # _*_ coding: utf-8 _*_
-
-
 # abf文件读取，提取其中trace信息，并plot为png格式图片
 # 可保存.csv数据信息
-import multiprocessing
+
+from multiprocessing import Pool
 import os
 import psutil
 from pyabf import ABF
@@ -23,8 +22,7 @@ def get_data(file, sub):
             abf.setSweep(i)
         else:
             abf.setSweep(i, sub)
-        data.insert(0, "{} trace{}".format(file.strip(".abf"), (i + 1)), abf.sweepY)
-    data = data.iloc[:, ::-1]
+        data.insert(i, "{} sweep{}".format(file.strip('.abf'),(i + 1)), abf.sweepY)
     return data
 
 
@@ -107,7 +105,7 @@ if __name__ == "__main__":
         
         print("please waite for seconds...")
         # 仅支持物理核心并行，不支持逻辑核心。例如R7-3700X支持core=8
-        pool = multiprocessing.Pool(cpu_core)
+        pool = Pool(cpu_core)
         for i in range(len(abf_file)):
             pool.apply_async(plot_abf, (abf_file[i], sub, merge, export))
         pool.close()
